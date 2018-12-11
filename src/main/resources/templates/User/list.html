@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+<div class="container">
+    <ul>
+        <!--/*@thymesVar id="blog" type="com.TripleT.BlogManager.controller.BlogController"*/-->
+        <th:block th:each="blog : ${blog}">
+            <li th:text="${blog.id}"></li>
+            <li th:text="${blog.title}"></li>
+            <li th:text="${blog.story}"></li>
+        </th:block>
+    </ul>
+</div>
+<footer th:replace="layout :: footer"></footer>
+</body>
+</html>

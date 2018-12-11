@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Post</title>
+</head>
+<body>
+<th:block th:if="${message}">
+    <p th:text="${message}"></p>
+</th:block>
+
+<form th:action="@{/blog/edit}" th:object="${blog}" method="post">
+    <input th:field="*{id}" type="hidden">
+    <input th:field="*{title}" type="text">
+    <input th:field="*{story}" type="text">
+
+    <input type="submit" value="add star">
+</form>
+</body>
+</html>

@@ -1,14 +1,15 @@
 package com.TripleT.BlogManager.controller;
 
 import com.TripleT.BlogManager.model.Blog;
-import com.TripleT.BlogManager.model.Post;
 import com.TripleT.BlogManager.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/blog")
@@ -20,32 +21,41 @@ public class BlogController {
         this.blogService = blogService;
     }
 
-    @GetMapping("/post")
-    public ModelAndView showPost() {
-        ModelAndView modelAndView = new ModelAndView("post");
-        modelAndView.addObject("post", new Blog());
+    @GetMapping("")
+    public ModelAndView showBlog(Pageable pageable) {
+        Page<Blog> blogs;
+        blogs = blogService.findAll(pageable);
+        ModelAndView modelAndView = new ModelAndView("/User/list");
+        modelAndView.addObject("blog", blogs);
         return modelAndView;
     }
 
-    @PostMapping("/post")
-    public ModelAndView addPost(@ModelAttribute("post") Blog blog) {
-        ModelAndView modelAndView = new ModelAndView("post");
+    @GetMapping("/add")
+    public ModelAndView showPost() {
+        ModelAndView modelAndView = new ModelAndView("/User/add");
+        modelAndView.addObject("blog", new Blog());
+        return modelAndView;
+    }
+
+    @PostMapping("/add")
+    public ModelAndView addPost(@ModelAttribute("blog") Blog blog) {
+        ModelAndView modelAndView = new ModelAndView("/User/add");
         blogService.save(blog);
         modelAndView.addObject("message", "Add Success !");
         return modelAndView;
     }
 
-    @GetMapping("/post/{id}")
+    @GetMapping("/edit/{id}")
     public ModelAndView showEdit(@PathVariable Long id) {
         Blog blog = blogService.findById(id);
-        ModelAndView modelAndView = new ModelAndView("edit");
+        ModelAndView modelAndView = new ModelAndView("/User/edit");
         modelAndView.addObject("blog", blog);
         return modelAndView;
     }
 
-    @PostMapping("/post")
+    @PostMapping("/edit")
     public ModelAndView editPost(@ModelAttribute("post") Blog blog) {
-        ModelAndView modelAndView = new ModelAndView("edit");
+        ModelAndView modelAndView = new ModelAndView("/User/edit");
         modelAndView.addObject("blog", blog);
         modelAndView.addObject("message", "Edit Success !");
         return modelAndView;

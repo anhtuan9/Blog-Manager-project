@@ -1,54 +1,40 @@
 package com.TripleT.BlogManager.controller;
 
+import com.TripleT.BlogManager.model.Blog;
+import com.TripleT.BlogManager.model.Post;
 import com.TripleT.BlogManager.service.BlogService;
-import com.TripleT.BlogManager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
-
 @Controller
+@RequestMapping("/blog")
 public class BlogController {
-    @Autowired
-    private UserService userService;
-    @Autowired
     private BlogService blogService;
 
-
-    @GetMapping("/")
-    public String index() {
-        return "index";
+    @Autowired
+    public BlogController(BlogService blogService) {
+        this.blogService = blogService;
     }
 
-    @GetMapping("/admin")
-    public String admin() {
-        return "admin";
+    @GetMapping("/post")
+    public ModelAndView showPost() {
+        ModelAndView modelAndView = new ModelAndView("post");
+        modelAndView.addObject("post", new Blog());
+        return modelAndView;
     }
 
-    @GetMapping("/403")
-    public String accessDenied() {
-        return "403";
-    }
-
-    @GetMapping("/login")
-    public String getLogin() {
-        return "login";
-    }
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return "redirect:/";
+    @PostMapping("/post")
+    public ModelAndView addPost(@ModelAttribute("post") Blog blog) {
+        ModelAndView modelAndView = new ModelAndView("post");
+        blogService.save(blog);
+        modelAndView.addObject("message", "Add Success !");
+        return modelAndView;
     }
 }

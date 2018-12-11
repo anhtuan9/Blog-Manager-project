@@ -9,12 +9,9 @@ public class Blog {
     private long id;
     private String story;
     private String title;
-    @JoinColumn(name = "notetype_id")
-    private User author;
 
-    public Blog(String story, String title, User author) {
+    public Blog(String story, String title) {
         this.story = story;
-        this.author = author;
     }
 
     public Blog() {
@@ -44,11 +41,4 @@ public class Blog {
         this.story = story;
     }
 
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
 }
